@@ -1,0 +1,4 @@
+AUTH0_DOMAIN=dev-asf.us.auth0.com
+AUTH0_CLIENT_ID=auth0_id
+AUTH0_CLIENT_SECRET=auth0_secret
+AUTH0_API_ID=https://url.of.api
