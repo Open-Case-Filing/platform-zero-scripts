@@ -101,6 +101,11 @@ curl http://localhost:8080/api/v1/resources \
   -H "Authorization: Bearer your-jwt-token"
 ```
 
+## Add Roles and Permissions 🛡️
+1. Rename .env copy to .env and fill in the details from auth0.
+2. node auth0-setup.js
+3. Roles and Permissions will now be available in the Auth0 dashboard.
+
 ## Contributing 🤝
 
 1. Fork the repository
