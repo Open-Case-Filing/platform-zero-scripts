@@ -1,0 +1,18 @@
+{
+  "type": "module",
+  "dependencies": {
+    "auth0": "^4.14.0",
+    "dotenv": "^16.4.7",
+    "node-fetch": "^3.3.2"
+  },
+  "name": "platform-zero",
+  "version": "1.0.0",
+  "description": "A modern, secure microservices platform featuring a Rust-based API Gateway and Resource API service.",
+  "main": "auth0-setup.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}
