@@ -1,0 +1,315 @@
+{
+	"info": {
+		"_postman_id": "0a1fb229-981e-4c41-a700-4287fd5dc2a9",
+		"name": "API Gateway Tests",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "34743678"
+	},
+	"item": [
+		{
+			"name": "Health Checks",
+			"item": [
+				{
+					"name": "Gateway Health Check",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/health",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"health"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Backend Health Check",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:3000/health",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"health"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Authentication",
+			"item": [
+				{
+					"name": "Login (OAuth)",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/auth/login",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"auth",
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "OAuth Callback",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "?code={{oauth_code}}",
+							"query": [
+								{
+									"key": "code",
+									"value": "{{oauth_code}}"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Protected API Routes",
+			"item": [
+				{
+					"name": "List Resources",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{auth_token}}"
+							}
+						],
+						"url": {
+							"raw": "http://localhost:8080/api/v1/resources",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"v1",
+								"resources"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create Resource",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{auth_token}}"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"Test Resource\",\n    \"description\": \"Created via Postman\"\n}"
+						},
+						"url": {
+							"raw": "http://localhost:8080/api/v1/resources",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"v1",
+								"resources"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Error Cases",
+			"item": [
+				{
+					"name": "Missing Auth Token",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/api/v1/resources",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"v1",
+								"resources"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Invalid Auth Token",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer invalid.token.here"
+							}
+						],
+						"url": {
+							"raw": "http://localhost:8080/api/v1/resources",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"v1",
+								"resources"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Invalid Route",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/invalid/route",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"invalid",
+								"route"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Rate Limiting Tests",
+			"item": [
+				{
+					"name": "Rapid Requests",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"// Test rate limiting by sending multiple requests quickly",
+									"for(let i = 0; i < 5; i++) {",
+									"    pm.sendRequest({",
+									"        url: 'http://localhost:8080/api/v1/resources',",
+									"        method: 'GET',",
+									"        header: {",
+									"            'Authorization': 'Bearer ' + pm.variables.get('auth_token')",
+									"        }",
+									"    }, function(err, res) {",
+									"        console.log(res ? res.code : err);",
+									"    });",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{auth_token}}"
+							}
+						],
+						"url": {
+							"raw": "http://localhost:8080/api/v1/resources",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"v1",
+								"resources"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					"// You can add pre-request scripts here"
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					"// Global tests can go here"
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "auth_token",
+			"value": "your.jwt.token"
+		},
+		{
+			"key": "oauth_code",
+			"value": "oauth_code_from_callback"
+		}
+	]
+}
